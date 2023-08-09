@@ -9,31 +9,26 @@
   <script>
     function login() {
 
-      let nick = $('#nick').val()
-      let email = $('#email').val()
-      let pw = $('#pw').val()
+      $.ajax({
+        type: "POST",
+        url: "/login",
+        data: { id_give: $('#email').val(), pw_give: $('#pw').val(), nick_give: $('#nick').val()},
+        success: function (response) {
+          if (response['result'] == 'success') {
+            // 로그인이 정상적으로 되면, 토큰을 받아옵니다.
+            // 이 토큰을 mytoken이라는 키 값으로 쿠키에 저장합니다.
+            //$.cookie('mytoken', response['token']);
 
-      let formData = new FormData();
-      formData.append("nick_give", nick);
-      formData.append("email_give", email);
-      formData.append("pw_give", pw);
-
-      
-      // 유저 정보
-      let user_data = {
-        nickname: nick,
-        email: email,
-        password: pw,
-      };
-
-      // // 유저 정보 메인 페이지로 보내기
-      localStorage.setItem('user_data', JSON.stringify(user_data));
-
-      fetch('/todo', { method: "POST", body: formData, }).then((response) => response.json()).then((data) => {
-        alert(data["msg"]);
-
-        window.location.reload();
-      });
+            alert('로그인 완료!')
+            window.location.href = '/join'
+          } else {
+            // 로그인이 안되면 에러메시지를 띄웁니다.
+            if (response['msg'] == '로그인 정보가 존재하지 않습니다.') { }
+            alert(response['msg'])
+          }
+        }
+      })Ï
+    });
 
       window.location.href = 'http://127.0.0.1:5500/templates/index.html'
     }   
