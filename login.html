@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LoginPage</title>
+  <link rel="stylesheet" href="css/login.css" />
+  <script>
+    function login() {
+
+      let nick = $('#nick').val()
+      let email = $('#email').val()
+      let pw = $('#pw').val()
+
+      let formData = new FormData();
+      formData.append("nick_give", nick);
+      formData.append("email_give", email);
+      formData.append("pw_give", pw);
+
+      
+      // 유저 정보
+      let user_data = {
+        nickname: nick,
+        email: email,
+        password: pw,
+      };
+
+      // // 유저 정보 메인 페이지로 보내기
+      localStorage.setItem('user_data', JSON.stringify(user_data));
+
+      fetch('/todo', { method: "POST", body: formData, }).then((response) => response.json()).then((data) => {
+        alert(data["msg"]);
+
+        window.location.reload();
+      });
+
+      window.location.href = 'http://127.0.0.1:5500/templates/index.html'
+    }   
+  </script>
+
+</head>
+
+<body>
+  <div class="wrap">
+    <h1>가장 간편한 To Do List</h1>
+    <span>Please use your email for registration</span>
+    <input type="text" placeholder="NickName" />
+    <input type="email" placeholder="Email" />
+    <input type="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+  </div>
+</body>
+
+</html>

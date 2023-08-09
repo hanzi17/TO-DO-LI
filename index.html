@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet" />
+
+    <title>✏️To DO List</title>
+
+    <style>
+        .title {
+            /* background-color: rebeccapurple; */
+            width: 1200px;
+            height: 150px;
+            margin: auto;
+            padding: 0px 40px;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list {
+            background-color: #8dcd52;
+            width: 1200px;
+            height: 150px;
+            margin: 10px auto;
+            padding: 0px 40px;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .myinput {
+            background-color: white;
+            width: 1200px;
+            height: 150px;
+            padding: 0px 40px;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+
+            position: fixed;
+            bottom: 40px;
+            /* ㄴ 밑에서 10px 위에 고정하기 */
+            left: calc(50% - 600px);
+            /* ㄴ position: fixed; 일때 가운데로 오게는 설정
+                  (600px는 cta의 width: 1200px; 반값) */
+            box-shadow: 0px 0px 10px 0px lightgray;
+
+            border-radius: 30px;
+        }
+
+        .date {
+            width: 150px;
+            height: 80px;
+            font-size: 20px;
+            border-radius: 30px;
+        }
+
+        .inputList {
+            width: 800px;
+            height: 80px;
+            font-size: 25px;
+            padding-left: 20px;
+            border-radius: 30px;
+        }
+
+        .myinput > button {
+            width: 120px;
+            height: 80px;
+            font-size: 20px;
+            border-radius: 30px;
+        }
+    </style>
+
+    <script>
+        // 로그인 페이지에서 입력한 정보
+        let { email, nickname, password } = JSON.parse(
+            localStorage.getItem('data')
+        );
+        console.log(email, nickname, password);
+
+        // 몽고DB to-do-list 데이터 화면에 출력하기
+        $(document).ready(function () {
+            show_todo();
+        });
+        function show_todo() {
+            $.ajax({
+            type: 'GET',
+            url: '/todo',
+            data: {},
+            success: function (response) {
+            let rows = response['todo_memos'];
+
+            for (let i = 0; i < rows.length; i++) {
+              const todo = rows[i].list;
+              const id = rows[i]._id;
+              const done = rows[i].done;
+              const date = rows[i].date;
+
+              let temp_html = ``
+              if (done == 0) {
+                temp_html = `<div class="todo_list" id="todo_list">
+                              <li>
+                                <h4>${date}</h4>
+                                <h2>${todo}</h2>
+                                <input class="todo_check" type="checkbox" id=${id} onclick="done_todo(event)">
+                                <button id=${id} onclick="delete_todo(event)" type="button" class="btn-close" aria-label="Close"></button>
+                              </li>
+                            </div>`
+                }
+              else {
+                temp_html = `<div class="todo_list" id="todo_list">
+                              <li>
+                                <h4>${date}</h4>
+                                <h2 class="done">${todo}</h2>
+                                <input type="checkbox" checked id=${id} onclick="cancel_todo(event)">
+                                <button id=${id} onclick="delete_todo(event)" type="button" class="btn-close" aria-label="Close"></button>
+                              </li>
+                            </div>`
+                }
+              $('#todo_list').append(temp_html);
+            }
+          }
+        })
+     };
+
+        // 몽고DB에 to-do-list 데이터 넣기
+        function save_todo() {
+            let date = $('#date').val()
+            let list = $('#inputList').val()
+
+            let formData = new FormData();
+            formData.append("date_give", date);
+            formData.append("list_give", list);
+
+            fetch('/todo', { method: "POST", body: formData, }).then((response) => response.json()).then((data) => {
+                alert(data["msg"]);
+                window.location.reload();
+            });
+        }
+
+        function done_todo(event){
+        const id = event.target.getAttribute('id');
+        $.ajax({
+            type: "POST",
+            url: "/todo/done",
+            data: {id_give : id },
+            success: function (response) {
+                alert(response["msg"])
+                window.location.reload()
+                }
+            });
+        }
+
+        function cancel_todo(event) {
+        const id = event.target.getAttribute('id');
+        $.ajax({
+            type: 'POST',
+            url: '/todo/cancel',
+            data: { id_give: id },
+            success: function (response) {
+            alert(response['msg']);
+            window.location.reload();
+            },
+        });
+        }
+
+        function delete_todo(event) {
+        const id = event.target.getAttribute('id');
+        $.ajax({
+            type: 'POST',
+            url: '/todo/delete',
+            data: { id_give: id },
+            success: function (response) {
+            alert(response['msg']);
+            window.location.reload();
+            },
+        });
+        }
+    </script>
+</head>
+
+
+<body>
+    <!-- 날씨, 제목, 로그아웃 -->
+    <div class="title">
+        <div>날씨</div>
+        <h1>To Do List</h1>
+        <button>로그아웃</button>
+    </div>
+
+    <!-- 입력된 리스트들(날짜, 내용, 체크) -->
+    <div id="listBox" class="listBox">
+        <div class="list">
+            <h4>날짜</h4>
+            <h3>웹미니 프로젝트 제출하기</h3>
+            <button>체크</button>
+        </div>
+    </div>
+
+    <!-- 날짜선택, 인풋(내용작성), 기록하기버튼 -->
+    <div class="myinput">
+        <input id="date" class="date" type="date">
+        <input id="inputList" class="inputList" type="text" placeholder="To Do List를 작성해주세요" />
+        <button onclick="save_todo()">기록하기</button>
+    </div>
