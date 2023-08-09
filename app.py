@@ -15,18 +15,21 @@ def home():
 # 몽고DB에 닉네임, 이메일, 비밀번호 데이터 넣기
 @app.route("/login", methods=["POST"])
 def login():
-    nickname_receive = request.form['nick_give']
-    email_receive = request.form['email_give']
-    password_receive = request.form['pw_give']
+    id_receive = request.form['id_give']
+    pw_receive = request.form['pw_give']
+    nick_receive = request.form['nick_give']
 
-    doc = {
-        'nick': nickname_receive,
-        'email': email_receive,
-        'pw': password_receive
-    }
-    db.todo.insert_one(doc)
-    return jsonify({'msg': '입력 완료!'})
+    # id, 암호화된pw을 가지고 해당 유저를 찾습니다.
+    result = db.todo.find_one({'email': id_receive, 'pw': pw_receive, 'nick': nick_receive})
 
+    # 찾으면 JWT 토큰을 만들어 발급합니다.
+    if result is not None:
+
+        # token을 줍니다.
+        return jsonify({'result': 'success'})
+    # 찾지 못하면
+    else:
+        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 # 몽고DB에 to-do-list 데이터 넣기
 @app.route("/todo", methods=["POST"])
