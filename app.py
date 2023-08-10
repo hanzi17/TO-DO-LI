@@ -97,12 +97,13 @@ def userInt():
 @app.route("/todo", methods=["GET"])
 def todo_get():    
     userInt_receive = int(request.cookies.get('userInt'))
+    nickname_receive = db.user.find_one({'userInt': userInt_receive})['nickname']
     todoinfo = list(db.todo.find({'userInt': userInt_receive}))
 
     for i in range(len(todoinfo)):
         todoinfo[i]['_id'] = str(todoinfo[i]['_id'])
     
-    return jsonify({'result': todoinfo, 'userInt': userInt_receive})
+    return jsonify({'result': todoinfo, 'userInt': userInt_receive, 'nickname': nickname_receive })
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5001, debug=True)
