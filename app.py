@@ -12,6 +12,7 @@ db = client.dbsparta
 
 @app.route('/')
 def home():
+    userInt_receive = request.cookies.get('userInt')
     return render_template('index.html')
 
 @app.route('/login')
@@ -26,24 +27,17 @@ def login():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
     nick_receive = request.form['nick_give']
-    todoMemo_receive = request.form['todoMemo_give']
-    done_receive = request.form['done_give']
-    date_receive = request.form['date_give']
     
     doc = {
         'userInt': userInt,
         'id': id_receive,
         'pw': pw_receive,
         'nickname' : nick_receive,
-        'todoList': [{'todoMemo' : todoMemo_receive,
-                        'done' : done_receive,
-                        'date' : date_receive}],
-        
     }
     userInt += 1 
 
     # id, 암호화된 pw을 가지고 해당 유저를 찾습니다.
-    result = db.todo.find_one({'id': id_receive, 'pw': pw_receive, 'nickname': nick_receive})
+    result = db.user.find_one({'id': id_receive, 'pw': pw_receive, 'nickname': nick_receive})
 
     # 찾으면 JWT 토큰을 만들어 발급합니다.
     if result is not None:
@@ -54,21 +48,6 @@ def login():
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
-
-# 몽고DB에 닉네임, 이메일, 비밀번호 데이터 넣기
-# @app.route("/login", methods=["POST"])
-# def login():
-#     nickname_receive = request.form['nick_give']
-#     email_receive = request.form['email_give']
-#     password_receive = request.form['pw_give']
-
-#     doc = {
-#         'nick': nickname_receive,
-#         'email': email_receive,
-#         'pw': password_receive
-#     }
-#     db.todo.insert_one(doc)
-#     return jsonify({'msg': '입력 완료!'})
 
 
 # 몽고DB에 to-do-list 데이터 넣기
@@ -113,14 +92,14 @@ def todo_delete():
 #ID를 가져오는 이유는 완료 표시를 하기 위해서!
 @app.route("/todo", methods=["GET"])
 def todo_get():
-    todo_memo_list = list(db.todo.find())
+    userInt_receive = request.cookies.get('userInt')
+    userinfo = db.user.find_one({'userInt': userInt_receive})
+
+    todo_memo_list = list(db.todo.find({}))
 
     for i in range(len(todo_memo_list)):
         todo_memo_list[i]['_id'] = str(todo_memo_list[i]['_id'])
-    return jsonify({'todo_memos': todo_memo_list})
+    return jsonify({'todo_memos': todo_memo_list, 'userIntNum':userinfo})
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5001, debug=True)
-
-
-    
+    app.run('0.0.0.0', port=5001, debug=True)    
