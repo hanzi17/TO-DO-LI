@@ -108,6 +108,16 @@
     button:hover {
       cursor: pointer;
     }
+
+    @media screen and (max-width: 479px) {
+    .wrap {
+      width: 90%;
+      height: 400px;
+    }
+    .wrap > h1 {
+      font-size: 20px;
+    }
+    }
   </style>
   <script>
     function login() {
@@ -145,7 +155,7 @@
     <h1>🐸 나만의 TO-DO-LI 🐸</h1>
     <span>로그인 후 이용해 주세요 개굴!</span>
     <input id="nick" type="text" placeholder="NickName" />
-    <input id="email" type="email" placeholder="Email" />
+    <input id="email" type="email" placeholder="ID" />
     <input id="pw" type="password" placeholder="Password" />
     <button onclick="login()">Login</button>
   </div>
