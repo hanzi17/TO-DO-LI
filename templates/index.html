@@ -18,10 +18,41 @@
     <title>✏️To DO List</title>
 
     <style>
-        .title {
-            /* background-color: rebeccapurple; */
+        @import url('https://fonts.googleapis.com/css2?family=Gaegu&display=swap');
+
+        *{font-family: 'Gaegu', cursive;}
+
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        p,
+        div,
+        a {
+            margin: 0px;
+            padding: 0px;
+            text-decoration: none;
+            font-weight: normal;
+        }
+
+        .box {
+            margin: auto;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
             width: 1200px;
+        }
+
+        /* 상단 박스  */
+
+        .topbox {
+            /* background-color: rebeccapurple; */
             height: 150px;
+            width: 90%;
             margin: auto;
             padding: 0px 40px;
 
@@ -31,23 +62,100 @@
             align-items: center;
         }
 
-        .list {
+        .currentWeather {
+            font-size: 28px;
+        }
+
+        .title {
+            font-size: 35px;
+            margin: auto;
+        }
+
+        .logoutbtn {
+            height: 50px;
+            width: 100px;
+            background-color: lemonchiffon;
+            border-radius: 40px;
+            font-size: 15px;
+            border: 1px solid gainsboro;
+            color:gray;
+            font-weight:600
+        }
+
+
+        /* 투두 리스트 출력 */
+        .listBox {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            width: 95%;
+            padding: 10px;
+
+            background-color: white;
+        }
+
+        .todo_list {
             background-color: #8dcd52;
-            width: 1200px;
-            height: 150px;
-            margin: 10px auto;
-            padding: 0px 40px;
 
             display: flex;
             flex-direction: row;
-            justify-content: space-between;
             align-items: center;
+            justify-content: left;
+
+            margin-bottom: 10px;
+            width: 90%;
+            min-height: 50px;
+
+            font-size: 30px;
+            border-radius: 40px;
+        }
+
+        .todo_date {
+            margin-right: 20px;
+            font-size: 20px;
+            margin: 0 20px;
+            font-weight: bold;
+        }
+
+        .todo_list>h2 {
+            font-size: 20px;
+            margin-right: auto;
+        }
+
+        .todo_list>input {
+            width: 20px;
+            height: 20px;
+            margin-left: auto;
+            margin-right: 20px;
+            outline: 0;
+            cursor: pointer;
+        }
+
+        .todo_list>button {
+            margin-right: 20px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        /* 투두리스트 완료시 타이틀과 날짜에 취소선 */
+        .todo_list>.todo_date_done {
+            margin-right: 20px;
+
+            text-decoration: line-through;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .listBox>.todo_list>h2.done {
+            text-decoration: line-through;
         }
 
         .myinput {
-            background-color: white;
-            width: 1200px;
-            height: 150px;
+            background-color: lemonchiffon;
+            width: 1100px;
+            height: 130px;
             padding: 0px 40px;
 
             display: flex;
@@ -57,167 +165,220 @@
 
             position: fixed;
             bottom: 40px;
-            /* ㄴ 밑에서 10px 위에 고정하기 */
-            left: calc(50% - 600px);
-            /* ㄴ position: fixed; 일때 가운데로 오게는 설정
-                  (600px는 cta의 width: 1200px; 반값) */
-            box-shadow: 0px 0px 10px 0px lightgray;
+            /* 밑에서 10px 위에 고정하기 */
+            left: calc(50% - 550px);
+            /* position: fixed; 일때 가운데로 오게는 설정
+               (600px는 cta의 width: 1200px; 반값) */
 
-            border-radius: 30px;
+            border-radius: 40px;
+            border: 1px solid gainsboro;
         }
 
         .date {
-            width: 150px;
-            height: 80px;
-            font-size: 20px;
-            border-radius: 30px;
+            width: 130px;
+            height: 65px;
+            font-size: 16px;
+            text-align: center;
+            padding-left: 10px;
+            border-radius: 40px;
+            color:gray;
+            border: 1px solid gainsboro;
         }
 
         .inputList {
-            width: 800px;
-            height: 80px;
-            font-size: 25px;
+            width: 700px;
+            height: 65px;
+            font-size: 20px;
             padding-left: 20px;
-            border-radius: 30px;
+            border-radius: 40px;
+            color:gray;
+            border: 1px solid gainsboro;
         }
 
-        .myinput > button {
-            width: 120px;
-            height: 80px;
+        .myinput>button {
+            width: 150px;
+            height: 65px;
             font-size: 20px;
-            border-radius: 30px;
+            border-radius: 40px;
+            background-color: gainsboro;
+            border: 1px solid gainsboro;
+            color:gray;
+            font-weight:800
         }
     </style>
 
     <script>
+        $(document).ready(function () {
+            show_todo();
+            renderCurrentWeather()
+            $('#listBox').empty();
+        });
+
         // 로그인 페이지에서 입력한 정보
         let { email, nickname, password } = JSON.parse(
             localStorage.getItem('data')
         );
         console.log(email, nickname, password);
 
-        // 몽고DB to-do-list 데이터 화면에 출력하기
-        $(document).ready(function () {
-            show_todo();
-        });
-        function show_todo() {
-            $.ajax({
-            type: 'GET',
-            url: '/todo',
-            data: {},
-            success: function (response) {
-            let rows = response['todo_memos'];
 
-            for (let i = 0; i < rows.length; i++) {
-              const todo = rows[i].list;
-              const id = rows[i]._id;
-              const done = rows[i].done;
-              const date = rows[i].date;
+        // (GET) 서버에서 받아온 투두 클라이언트에서 출력하기
+        function show_todo() {  // show_todo() 함수는 서버에 GET 요청을 보내서 투두 가져옴
+            $.ajax({  // AJAX = fetch와 같은 역할
+                type: 'GET',
+                url: '/todo',
+                data: {},  // 클라이언트가 서버로 데이터를 전송하지 않는 경우에 이렇게 표현(GET 요청이기 때문에 보낼 데이터 없음 / GET은 읽어온다)
+                success: function (response) {  // 요청이 성공하면 실행되는 함수
+                    let rows = response['todo_memos'];  // 서버에서 받은 값 = "todo" 컬렉션에서 모든 문서들
+                                                        // AJAX 요청을 보내면 서버는 데이터를 전송하는데, 이 데이터를 response 변수에 저장하여 클라이언트에서 활용
 
-              let temp_html = ``
-              if (done == 0) {
-                temp_html = `<div class="todo_list" id="todo_list">
-                              <li>
-                                <h4>${date}</h4>
-                                <h2>${todo}</h2>
-                                <input class="todo_check" type="checkbox" id=${id} onclick="done_todo(event)">
-                                <button id=${id} onclick="delete_todo(event)" type="button" class="btn-close" aria-label="Close"></button>
-                              </li>
-                            </div>`
+                    for (let i = 0; i < rows.length; i++) {
+                        const todo = rows[i].list;
+                        const id = rows[i]._id;  // 투두의 고유 ID값
+                        const done = rows[i].done;  // 투두의 완료 상태
+                        const date = rows[i].date;
+
+                        let temp_html = ``  // 출력할 HTML 코드를 담을 변수
+                        if (done === 0) {  // 투두가 완료되지 않은 상태일 때, 완료되지 않은 투두의 HTML 출력
+                            temp_html = `<div id="listBox" class="listBox">  
+                                            <div class="todo_list">
+                                                <div class="todo_date">${date}</div>
+                                                <h2>${todo}</h2>
+                                                <input class="todo_check" type="checkbox" id=${id} onclick="done_todo(event)">
+                                                <button id=${id} onclick="delete_todo(event)" type="button" class="btn-close" aria-label="Close"></button>
+                                            </div>
+                                        </div>`
+                        }
+                        else {  // 투두가 완료 상태일 때, 완료된 투두의 HTML 출력
+                            temp_html = `<div id="listBox" class="listBox">
+                                            <div class="todo_list">
+                                                <div class="todo_date_done">${date}</div>
+                                                <h2 class="done">${todo}</h2>
+                                                <input class="todo_check" type="checkbox" checked id=${id} onclick="cancel_todo(event)">
+                                                <button id=${id} onclick="delete_todo(event)" type="button" class="btn-close" aria-label="Close"></button>
+                                            </div>
+                                        </div>`
+                        }
+                        $('#listBox').append(temp_html);
+                    }
                 }
-              else {
-                temp_html = `<div class="todo_list" id="todo_list">
-                              <li>
-                                <h4>${date}</h4>
-                                <h2 class="done">${todo}</h2>
-                                <input type="checkbox" checked id=${id} onclick="cancel_todo(event)">
-                                <button id=${id} onclick="delete_todo(event)" type="button" class="btn-close" aria-label="Close"></button>
-                              </li>
-                            </div>`
-                }
-              $('#todo_list').append(temp_html);
-            }
-          }
-        })
-     };
+            })
+        };
 
-        // 몽고DB에 to-do-list 데이터 넣기
+
+
+        // (POST) 몽고DB에 투두 넣기
         function save_todo() {
-            let date = $('#date').val()
-            let list = $('#inputList').val()
-
-            let formData = new FormData();
-            formData.append("date_give", date);
-            formData.append("list_give", list);
-
-            fetch('/todo', { method: "POST", body: formData, }).then((response) => response.json()).then((data) => {
-                alert(data["msg"]);
+            let date = $('#date').val()  // date에 입력된 값을 date 변수에 넣기
+            let list = $('#inputList').val()  // inputList에 입력된 값을 List 변수에 넣기
+            
+            let formData = new FormData(); // 서버에 전송할 데이터를 담기
+            formData.append("date_give", date);  // 날짜를 'date_give'에 담기
+            formData.append("list_give", list);  // 투두를 'list_give'에 담기
+            
+            fetch('/todo', { method: "POST", body: formData, }).then((response) => response.json()).then((data) => { // 서버에 POST 요청 보내기
+                alert(data["msg"]);  // 서버단 return값인 jsonify({'msg': '입력 완료!'})가 들어와서 출력됨
                 window.location.reload();
             });
         }
 
-        function done_todo(event){
-        const id = event.target.getAttribute('id');
-        $.ajax({
-            type: "POST",
-            url: "/todo/done",
-            data: {id_give : id },
-            success: function (response) {
-                alert(response["msg"])
-                window.location.reload()
+
+
+
+        // (GET) 클라이언트 출력 후 > (POST) 완료 투두 처리
+        function done_todo(event) {  // event는 '클릭' 같은 동작에 대한 정보를 가지고 있음
+            const id = event.target.getAttribute('id');  // event.target : 클릭한 요소(체크박스 onclick=done_todo)를 말하며 체크박스 onclick의 아이디값(=투두의 고유 ID값) 가져오기
+            $.ajax({  // 서버로 할 일 완료 요청을 보내기 위해 AJAX 요청 전송(fetch와 같은 역할)
+                type: "POST",
+                url: "/todo/done",
+                data: { id_give: id },  // 서버로 보낼 데이터: 투두의 id
+                success: function (response) {  // 요청이 성공적으로 완료되었을 때 실행할 함수
+                    alert(response["msg"])  // 서버에서 받은 응답 데이터 중 "msg"라는 이름의 값을 팝업 창으로 표시
+                    // response는 클라이언트 측에서 서버로부터 받은 응답 데이터를 나타내는 변수
+                    window.location.reload()
                 }
             });
         }
 
-        function cancel_todo(event) {
-        const id = event.target.getAttribute('id');
-        $.ajax({
-            type: 'POST',
-            url: '/todo/cancel',
-            data: { id_give: id },
-            success: function (response) {
-            alert(response['msg']);
-            window.location.reload();
-            },
-        });
+
+
+        // (GET) 클라이언트 출력 후 > (POST) 완료취소 투두 처리
+        function cancel_todo(event) {  // event는 '클릭' 같은 동작에 대한 정보를 가지고 있음
+            const id = event.target.getAttribute('id');  // event.target : 클릭한 요소(체크박스 onclick=cancel_todo)를 말하며 체크박스 onclick의 아이디값(=투두의 고유 ID값) 가져오기
+            $.ajax({
+                type: 'POST',
+                url: '/todo/cancel',
+                data: { id_give: id },  // 서버로 보낼 데이터: 투두의 id
+                success: function (response) {  // 요청이 성공적으로 완료되었을 때 실행할 함수
+                    alert(response['msg']);  // 서버에서 받은 응답 데이터 중 "msg"라는 이름의 값을 팝업 창으로 표시
+                    // response는 클라이언트 측에서 서버로부터 받은 응답 데이터를 나타내는 변수
+                    window.location.reload();
+                },
+            });
         }
 
+
+
+        // (GET) 클라이언트 출력 후 > (POST) 삭제 투두 처리
         function delete_todo(event) {
-        const id = event.target.getAttribute('id');
-        $.ajax({
-            type: 'POST',
-            url: '/todo/delete',
-            data: { id_give: id },
-            success: function (response) {
-            alert(response['msg']);
-            window.location.reload();
-            },
-        });
+            const id = event.target.getAttribute('id');  // event.target : 클릭한 요소(버튼 onclick=delete_todo)를 말하며 버튼 onclick의 아이디값(=투두의 고유 ID값) 가져오기
+            $.ajax({
+                type: 'POST',
+                url: '/todo/delete',
+                data: { id_give: id },
+                success: function (response) {
+                    alert(response['msg']);
+                    window.location.reload();
+                },
+            });
         }
+
+        function renderCurrentWeather() {
+            let url = `http://spartacodingclub.shop/sparta_api/weather/seoul`  // https://goweather.herokuapp.com/weather/seoul > 연결이 안될때도 있어서 서울의 날씨로 가져옴
+            fetch(url).then(res => res.json()).then((data) => {
+                let Weather = data['temp'].toFixed(1)  // 소수점 한자리까지 가져옴(반올림됨)
+                $('#currentWeather').text(Weather)
+            })
+        }
+
+        function logout() {
+            window.location.href = 'http://127.0.0.1:5500/templates/login.html'  // 127.0.0.1(IP):5500(port)번호            
+            // window.location.href = 'https://www.google.co.kr/?hl=ko'  // 서버 연결 후 구글로 이동
+            // window.location.href = 'login.html'  // 서버 연결 전 페이지만 연결
+
+            // window.location.href = 'login.html'  // 안됨
+            // window.location.href = 'templates/login.html'  // 안됨
+            // window.location.href = 'http://login.html'  // 안됨
+            // window.location.href = 'http://templates/login.html'  // 안됨
+            // window.location.href = 'http://127.0.0.1:5001/login.html'  // 안됨
+        }   
     </script>
 </head>
 
 
 <body>
-    <!-- 날씨, 제목, 로그아웃 -->
-    <div class="title">
-        <div>날씨</div>
-        <h1>To Do List</h1>
-        <button>로그아웃</button>
-    </div>
-
-    <!-- 입력된 리스트들(날짜, 내용, 체크) -->
-    <div id="listBox" class="listBox">
-        <div class="list">
-            <h4>날짜</h4>
-            <h3>웹미니 프로젝트 제출하기</h3>
-            <button>체크</button>
+    <div class="box">
+        <!-- 날씨, 제목, 로그아웃 -->
+        <div class="topbox">
+            <div id="currentWeather" class="currentWeather"></div>
+            <div class="title">🐸 {투두리}님의 TO-DO-LI🐸</div>
+            <div>
+                <button class="logoutbtn" onclick="logout()">로그아웃</button>
+            </div>
         </div>
-    </div>
 
-    <!-- 날짜선택, 인풋(내용작성), 기록하기버튼 -->
-    <div class="myinput">
-        <input id="date" class="date" type="date">
-        <input id="inputList" class="inputList" type="text" placeholder="To Do List를 작성해주세요" />
-        <button onclick="save_todo()">기록하기</button>
+        <!-- 입력된 리스트들(날짜, 내용, 체크) -->
+        <div id="listBox" class="listBox">
+            <div class="todo_list">
+                <div class="todo_date">날짜</div>
+                <h3>웹미니 프로젝트 제출하기</h3>
+                <button>체크</button>
+            </div>
+        </div>
+
+        <!-- 날짜선택, 인풋(내용작성), 기록하기버튼 -->
+        <div class="myinput">
+            <input id="date" class="date" type="date">
+            <input id="inputList" class="inputList" type="text" placeholder="To Do List를 작성해주세요" />
+            <button onclick="save_todo()">기록하기</button>
+        </div>
     </div>
