@@ -4,45 +4,159 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LoginPage</title>
-  <link rel="stylesheet" href="css/login.css" />
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <title>🐸 WELCOME TO-DO-LI 🐸</title>
+  <meta property="og:title" content="16기 15조 : 웹미니프로젝트" />
+  <meta property="og:description" content="🐸TO-DO-LI🐸"/>
+  <meta property="og:image" content="" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+  <style>
+    @charset "UTF-8";
+    @import url('https://fonts.googleapis.com/css2?family=Gaegu&display=swap');
+
+    * {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    ul,
+    ol {
+      list-style: none;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    * {
+      font-family: 'Gaegu', cursive;
+    }
+
+    body {
+      width: 100%;
+      height: 100%;
+      background-color: #f0fff0;
+    }
+
+    /*-----------------------------------------------*/
+    /* 로그인 박스 */
+    .wrap {
+      width: 500px;
+      height: 400px;
+      background-color: #8dcd52;
+      border-radius: 50px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      margin: auto;
+      margin-top: 70px;
+    }
+
+    /*-----------------------------------------------*/
+
+    /* 제목 */
+    .wrap>h1 {
+      margin-top: 20px;
+    }
+
+    /*-----------------------------------------------*/
+
+    /* Please 안내문 */
+    .wrap>span {
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+
+    /*-----------------------------------------------*/
+
+    /* 닉네임, 이메일, 패스워드*/
+    input {
+      width: 80%;
+      height: 10px;
+      border-radius: 15px;
+      background-color: lemonchiffon;
+      color: gray;
+      border: none;
+      padding: 12px 15px;
+      margin: 8px 0;
+    }
+
+    /*-----------------------------------------------*/
+
+    /* 로그인 버튼 */
+    button {
+      border-radius: 20px;
+      border: 1px solid gainsboro;
+      background-color: gainsboro;
+      color: gray;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 12px 45px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: transform 80ms ease-in;
+      margin-top: 30px;
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    button:hover {
+      cursor: pointer;
+    }
+
+    @media screen and (max-width: 479px) {
+    .wrap {
+      width: 90%;
+      height: 400px;
+    }
+    .wrap > h1 {
+      font-size: 20px;
+    }
+    }
+  </style>
   <script>
     function login() {
-
       $.ajax({
-        type: "POST",
-        url: "/login",
-        data: { id_give: $('#email').val(), pw_give: $('#pw').val(), nick_give: $('#nick').val()},
+        type: 'POST',
+        url: '/login',
+        data: {
+          id_give: $('#email').val(),
+          pw_give: $('#pw').val(),
+          nick_give: $('#nick').val(),
+        },
         success: function (response) {
           if (response['result'] == 'success') {
             // 로그인이 정상적으로 되면, 토큰을 받아옵니다.
             // 이 토큰을 mytoken이라는 키 값으로 쿠키에 저장합니다.
             //$.cookie('mytoken', response['token']);
-
-            alert('로그인 완료!')
-            window.location.href = '/join'
+            console.log(response['userInt']);
+            $.cookie('userInt', response['userInt']);
+            alert('로그인 완료!');
+            window.location.href = '/index';
           } else {
             // 로그인이 안되면 에러메시지를 띄웁니다.
-            if (response['msg'] == '로그인 정보가 존재하지 않습니다.') { }
-            alert(response['msg'])
+            if (response['msg'] == '로그인 정보가 존재하지 않습니다.') {
+            }
+            alert(response['msg']);
           }
-        }
-      })
-    });
-
-      window.location.href = 'http://127.0.0.1:5500/templates/index.html'
-    }   
+        },
+      });
+    }
   </script>
-
 </head>
 
 <body>
   <div class="wrap">
-    <h1>가장 간편한 To Do List</h1>
-    <span>Please use your email for registration</span>
-    <input type="text" placeholder="NickName" />
-    <input type="email" placeholder="Email" />
-    <input type="password" placeholder="Password" />
+    <h1>🐸 나만의 TO-DO-LI 🐸</h1>
+    <span>로그인 후 이용해 주세요 개굴!</span>
+    <input id="nick" type="text" placeholder="NickName" />
+    <input id="email" type="email" placeholder="ID" />
+    <input id="pw" type="password" placeholder="Password" />
     <button onclick="login()">Login</button>
   </div>
 </body>
