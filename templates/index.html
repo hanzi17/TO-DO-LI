@@ -169,6 +169,48 @@
             window.location.reload();
           });
       }
+
+      //todo 지우기
+      function delete_todo(event) {
+        const id = event.target.getAttribute('id');
+        $.ajax({
+          type: 'POST',
+          url: '/todo/delete',
+          data: { id_give: id },
+          success: function (response) {
+            alert(response['msg']);
+            window.location.reload();
+          },
+        });
+      }
+
+      // done
+      function done_todo(event) {
+        const id = event.target.getAttribute('id');
+        $.ajax({
+          type: 'POST',
+          url: '/todo/done',
+          data: { id_give: id },
+          success: function (response) {
+            alert(response['msg']);
+            window.location.reload();
+          },
+        });
+      }
+
+      // cacel
+      function cancel_todo(event) {
+        const id = event.target.getAttribute('id');
+        $.ajax({
+          type: 'POST',
+          url: '/todo/cancel',
+          data: { id_give: id },
+          success: function (response) {
+            alert(response['msg']);
+            window.location.reload();
+          },
+        });
+      }
     </script>
   </head>
 
