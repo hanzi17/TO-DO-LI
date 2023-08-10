@@ -230,17 +230,19 @@
 
     // 투두데이터 가져오기
     function show_todo() {
+      $('#title').empty();
       fetch('/todo')
         .then((res) => res.json())
         .then((data) => {
-          rows = data['result'];
+          let rows = data['result'];
+          let nickname = data['nickname']
           
           for (let i = 0; i < rows.length; i++) {
             const todo = rows[i].list;
             const id = rows[i]._id;
             const done = rows[i].done;
             const date = rows[i].date;
-            const nickname = rows[i].nickname;
+            nickname = nickname;
 
             let temp_html = ``
             if (done === 0) {
@@ -265,21 +267,12 @@
             }
             $('#listBox').append(temp_html);
           }
-        }
-        )
-    };
-
-    // 닉네임을 넣어주고 싶다..
-    function show_name() {
-      fetch('/todo')
-        .then((res) => res.json())
-        .then((data) => {
-          rows = data['result'];
 
           let temp_html2 = `<div id ="title" class="title">🐸 ${nickname}님의 TO-DO-LI 🐸</div>`
           $('#title').append(temp_html2);
-        })}
-
+        }
+        )
+    };
 
     // 몽고DB에 to-do-list 데이터 넣기
     function save_todo() {
