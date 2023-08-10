@@ -1,50 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <title>LoginPage</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <style>
+      /* css 초기화 세팅 */
+      @charset "UTF-8";
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LoginPage</title>
-  <link rel="stylesheet" href="css/login.css" />
-  <script>
-    function login() {
+      * {
+        margin: 0px;
+        padding: 0px;
+      }
 
-      $.ajax({
-        type: "POST",
-        url: "/login",
-        data: { id_give: $('#email').val(), pw_give: $('#pw').val(), nick_give: $('#nick').val()},
-        success: function (response) {
-          if (response['result'] == 'success') {
-            // 로그인이 정상적으로 되면, 토큰을 받아옵니다.
-            // 이 토큰을 mytoken이라는 키 값으로 쿠키에 저장합니다.
-            //$.cookie('mytoken', response['token']);
+      ul,
+      ol {
+        list-style: none;
+      }
 
-            alert('로그인 완료!')
-            window.location.href = '/join'
-          } else {
-            // 로그인이 안되면 에러메시지를 띄웁니다.
-            if (response['msg'] == '로그인 정보가 존재하지 않습니다.') { }
-            alert(response['msg'])
-          }
-        }
-      })
-    });
+      a {
+        text-decoration: none;
+      }
 
-      window.location.href = 'http://127.0.0.1:5500/templates/index.html'
-    }   
-  </script>
+      body {
+        width: 100%;
+        height: 100%;
+      }
+      /*-----------------------------------------------*/
+      /* 로그인 박스 */
+      .wrap {
+        width: 500px;
+        height: 400px;
+        background-color: skyblue;
 
-</head>
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
 
-<body>
-  <div class="wrap">
-    <h1>가장 간편한 To Do List</h1>
-    <span>Please use your email for registration</span>
-    <input type="text" placeholder="NickName" />
-    <input type="email" placeholder="Email" />
-    <input type="password" placeholder="Password" />
-    <button onclick="login()">Login</button>
-  </div>
-</body>
+        margin: auto;
+        margin-top: 70px;
+      }
+      /*-----------------------------------------------*/
 
+      /* 제목 */
+      .wrap > h1 {
+        margin-top: 20px;
+      }
+      /*-----------------------------------------------*/
+
+      /* Please 안내문 */
+      .wrap > span {
+        margin-top: 30px;
+        margin-bottom: 20px;
+      }
+      /*-----------------------------------------------*/
+
+      /* 닉네임, 이메일, 패스워드*/
+      input {
+        width: 80%;
+        height: 10px;
+        opacity: 50%;
+        border-radius: 15px;
+        background-color: #eee;
+        border: none;
+        padding: 12px 15px;
+        margin: 8px 0;
+      }
+      /*-----------------------------------------------*/
+
+      /* 로그인 버튼 */
+      button {
+        border-radius: 20px;
+        border: 1px solid gray;
+        background-color: gray;
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 12px 45px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: transform 80ms ease-in;
+        margin-top: 30px;
+      }
+      button:active {
+        transform: scale(0.95);
+      }
+      button:hover {
+        cursor: pointer;
+      }
+    </style>
+    <script>
+      function login() {
+        $.ajax({
+          type: 'POST',
+          url: '/login',
+          data: {
+            id_give: $('#email').val(),
+            pw_give: $('#pw').val(),
+            nick_give: $('#nick').val(),
+          },
+          success: function (response) {
+            if (response['result'] == 'success') {
+              // 로그인이 정상적으로 되면, 토큰을 받아옵니다.
+              // 이 토큰을 mytoken이라는 키 값으로 쿠키에 저장합니다.
+              //$.cookie('mytoken', response['token']);
+              console.log(response['userInt']);
+              $.cookie('userInt', response['userInt']);
+              alert('로그인 완료!');
+              window.location.href = '/';
+            } else {
+              // 로그인이 안되면 에러메시지를 띄웁니다.
+              if (response['msg'] == '로그인 정보가 존재하지 않습니다.') {
+              }
+              alert(response['msg']);
+            }
+          },
+        });
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <h1>가장 간편한 To Do List</h1>
+      <span>Please use your email for registration</span>
+      <input id="nick" type="text" placeholder="NickName" />
+      <input id="email" type="email" placeholder="Email" />
+      <input id="pw" type="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+    </div>
+  </body>
 </html>
