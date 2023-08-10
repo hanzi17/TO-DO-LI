@@ -24,7 +24,8 @@
  .wrap {
    width: 500px;
    height: 400px;
-   background-color: skyblue;
+   background-color: #8dcd52;
+   border-radius: 50px;
 
    display: flex;
    flex-direction: column;
@@ -53,9 +54,9 @@
  input {
    width: 80%;
    height: 10px;
-   opacity: 50%;
    border-radius: 15px;
-   background-color: #eee;
+   background-color: lemonchiffon;
+   color:gray;
    border: none;
    padding: 12px 15px;
    margin: 8px 0;
@@ -65,10 +66,10 @@
  /* 로그인 버튼 */
  button {
    border-radius: 20px;
-   border: 1px solid gray;
-   background-color: gray;
-   color: #ffffff;
-   font-size: 12px;
+   border: 1px solid gainsboro;
+   background-color: gainsboro;
+   color:gray;
+   font-size: 18px;
    font-weight: bold;
    padding: 12px 45px;
    letter-spacing: 1px;
