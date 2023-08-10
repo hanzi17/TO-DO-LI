@@ -240,6 +240,7 @@
             const id = rows[i]._id;
             const done = rows[i].done;
             const date = rows[i].date;
+            const nickname = rows[i].nickname;
 
             let temp_html = ``
             if (done === 0) {
@@ -267,6 +268,18 @@
         }
         )
     };
+
+    // 닉네임을 넣어주고 싶다..
+    function show_name() {
+      fetch('/todo')
+        .then((res) => res.json())
+        .then((data) => {
+          rows = data['result'];
+
+          let temp_html2 = `<div id ="title" class="title">🐸 ${nickname}님의 TO-DO-LI 🐸</div>`
+          $('#title').append(temp_html2);
+        })}
+
 
     // 몽고DB에 to-do-list 데이터 넣기
     function save_todo() {
@@ -333,7 +346,7 @@
         }
 
         function logout() {
-            window.location.href = 'http://127.0.0.1:5500/templates/login.html'  // 127.0.0.1(IP):5500(port)번호            
+            window.location.href = '/'  // 127.0.0.1(IP):5500(port)번호            
         }   
   </script>
 </head>
@@ -343,7 +356,7 @@
     <!-- 날씨, 제목, 로그아웃 -->
     <div class="topbox">
         <div id="currentWeather" class="currentWeather"></div>
-        <div class="title">🐸 {투두리}님의 TO-DO-LI🐸</div>
+        <div id ="title" class="title">🐸 {투두리}님의 TO-DO-LI🐸</div>
         <div>
             <button class="logoutbtn" onclick="logout()">로그아웃</button>
         </div>
