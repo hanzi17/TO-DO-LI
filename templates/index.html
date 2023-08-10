@@ -140,6 +140,7 @@
         text-decoration: line-through;
         }
 
+        /* 하단 글 작성 input */
         .myinput {
             background-color: white;
             width: 1200px;
@@ -188,14 +189,18 @@
     <script>
         // 몽고DB to-do-list 데이터 화면에 출력하기
         $(document).ready(function () {
+            success_show_todo();
             show_todo();
             $('#listBox').empty();
         });
-        // 로그인 페이지에서 입력한 정보
-        let { email, nickname, password } = JSON.parse(
-            localStorage.getItem('data')
-        );
-        console.log(email, nickname, password);
+
+        function success_show_todo() {
+        fetch('/todo')
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+          });
+        }
 
         function show_todo() {
             $.ajax({
@@ -204,15 +209,18 @@
                 data: {},
                 success: function (response) {
                     let rows = response['todo_memos'];
+                    let userId = response['userIntnum'];
+                    console.log(userId)
 
                     for (let i = 0; i < rows.length; i++) {
                         const todo = rows[i].list;
                         const id = rows[i]._id;
                         const done = rows[i].done;
                         const date = rows[i].date;
+                        const user = rows[i].userInt
 
                         let temp_html = ``
-                        if (done === 0) {
+                        if (userId == user && done === 0) {
                             temp_html = `<div id="listBox" class="listBox">
                                             <div class="todo_list">
                                                 <div class="todo_date">${date}</div>
@@ -222,7 +230,7 @@
                                             </div>
                                         </div>`
                         }
-                        else {
+                        else if (userId == user && done === 1) {
                             temp_html = `<div id="listBox" class="listBox">
                                             <div class="todo_list">
                                                 <div class="todo_date_done">${date}</div>
@@ -242,6 +250,7 @@
         function save_todo() {
             let date = $('#date').val()
             let list = $('#inputList').val()
+            // 여기서도 로그인 고유 정수 값을 넣어줘야 하는지?
 
             let formData = new FormData();
             formData.append("date_give", date);
