@@ -39,6 +39,10 @@
       font-weight: normal;
     }
 
+    body {
+      background-color: #f0fff0;
+    }
+
     .box {
       margin: auto;
 
@@ -55,7 +59,7 @@
     .topbox {
       /* background-color: rebeccapurple; */
       height: 150px;
-      width: 90%;
+      width: 85%;
       margin: auto;
       padding: 0px 40px;
 
@@ -67,6 +71,7 @@
 
     .currentWeather {
       font-size: 28px;
+      
     }
 
     .title {
@@ -96,7 +101,7 @@
       width: 95%;
       padding: 10px;
 
-      background-color: white;
+      background-color: #f0fff0;
     }
 
     .todo_list {
@@ -144,10 +149,10 @@
 
     /* 투두리스트 완료시 타이틀과 날짜에 취소선 */
     .todo_list>.todo_date_done {
-      margin-right: 20px;
+      margin: 0 20px;
 
       text-decoration: line-through;
-      font-size: 15px;
+      font-size: 20px;
       font-weight: bold;
     }
 
@@ -215,6 +220,7 @@
     $(document).ready(function () {
       // userInfo();
       show_todo();
+      renderCurrentWeather()
       $('#listBox').empty();
     });
 
@@ -334,12 +340,12 @@
             let url = `http://spartacodingclub.shop/sparta_api/weather/seoul`  // https://goweather.herokuapp.com/weather/seoul > 연결이 안될때도 있어서 서울의 날씨로 가져옴
             fetch(url).then(res => res.json()).then((data) => {
                 let Weather = data['temp'].toFixed(1)  // 소수점 한자리까지 가져옴(반올림됨)
-                $('#currentWeather').text(Weather)
+                $('#currentWeather').text(Weather+'도')
             })
         }
 
         function logout() {
-            window.location.href = '/'  // 127.0.0.1(IP):5500(port)번호            
+            window.location.href = '/'    
         }   
   </script>
 </head>
