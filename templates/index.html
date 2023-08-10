@@ -219,6 +219,59 @@
       font-weight: 800
     }
 
+    @media ( max-width: 768px ) {
+    #box {
+      width: 100%;
+    }
+
+    #topbox {
+      width: 90%;
+    }
+
+      .title {
+      font-size: 25px;
+      margin: auto;
+    }
+
+      #box {
+        width: 90%;
+      }
+
+    #listBox {
+        width: 90%;
+      }
+
+    #myinput {
+      margin: auto;
+      width: 90%;
+      height: 130px;
+      position: absolute;
+      left:50%;
+      text-align:center;
+      transform: translate(-50%, 0%);
+    }
+
+    .date {
+      margin-right: 5px;
+      width: 20%;
+      font-size: 14px;
+      padding: 5px;
+
+      float: none;
+    }
+
+    .inputList {
+      margin-right:5px;
+      width: 60%;
+    }
+
+    .myinput>button {
+      width: 20%;
+    }
+
+
+    }
+
   </style>
 
   <script>
@@ -259,8 +312,8 @@
             let temp_html = ``
             if (done === 0) {
               temp_html = `<div id="listBox" class="listBox">
-                              <div class="todo_list">
-                                <div class="todo_date">${date}</div>
+                              <div id="todo_list" class="todo_list">
+                                <div id=""todo_date" class="todo_date">${date}</div>
                                 <h2>${todo}</h2>
                                 <input id=${id} class="todo_check" type="checkbox" onclick="done_todo(event)">
                                 <button id=${id} onclick="delete_todo(event)" type="button" class="btn-close" aria-label="Close"></button>
@@ -357,9 +410,9 @@
 </head>
 
 <body>
-  <div class="box">
+  <div id="box" class="box">
     <!-- 날씨, 제목, 로그아웃 -->
-    <div class="topbox">
+    <div id="topbox "class="topbox">
         <div id="currentWeather" class="currentWeather"></div>
         <div id ="title" class="title">🐸 {투두리}님의 TO-DO-LI🐸</div>
         <div>
@@ -369,15 +422,15 @@
 
     <!-- 입력된 리스트들(날짜, 내용, 체크) -->
     <div id="listBox" class="listBox">
-        <div class="todo_list">
-            <div class="todo_date">날짜</div>
+        <div id="todo_list" class="todo_list">
+            <div id="todo_date" class="todo_date">날짜</div>
             <h3>웹미니 프로젝트 제출하기</h3>
             <button>체크</button>
         </div>
     </div>
 
     <!-- 날짜선택, 인풋(내용작성), 기록하기버튼 -->
-    <div class="myinput">
+    <div id="myinput" class="myinput">
         <input id="date" class="date" type="date">
         <input id="inputList" class="inputList" type="text" placeholder="To Do List를 작성해주세요" />
         <button onclick="save_todo()">기록하기</button>
