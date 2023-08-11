@@ -86,3 +86,10 @@ to-do-list 삭제
 
 ### logout()
 로그아웃 버튼 클릭시 로그인 페이지로 이동
+
+----------
+
+## 로그인 방법
+회원가입 기능을 따로 구현하지 못했기 때문에 아래의 계정으로 로그인 가능
+1. id: test1, pw: test1. nickname: 개굴일
+2. id: test2, pw: test2. nickname: 개굴이
