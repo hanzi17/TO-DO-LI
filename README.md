@@ -27,7 +27,10 @@ $ pip install flask pymongo bson dnspython
 ### Environment
 Visual Studio Code, Git, GitHub
 ### Development
-JavaScript, Python, HTML5, CSS3, Ajax, Jquery, Flask
+#### FrontEnd
+JavaScript, HTML5, CSS3, Ajax, Jquery
+#### BackEnd
+Python, Flask, MongoDB
 ### Communication
 Slack, Gather
 
