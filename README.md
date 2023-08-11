@@ -1,4 +1,4 @@
-# 개굴리: to-do-list 웹페이지
+# 🐸 TO-DO-LI 🐸 : to-do-list 웹페이지
 
 ## 팀원
 김용빈 ENTJ
