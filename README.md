@@ -13,7 +13,7 @@
 http://todoli.eba-etyihryg.ap-northeast-2.elasticbeanstalk.com/
 
 ## 프로젝트 소개
-항해99 사전 프로젝트로 본 과정을 진행하기 이전에 진행하는 웹페이지 제작 미니 프로젝트
+항해99 사전 프로젝트로 본 과정을 진행하기 이전에 진행하는 웹페이지 제작 미니 프로젝트로, 나만의 to-do-list를 작성하고 관리하는 서비스 프로젝트
 
 ## 시작 가이드
 ### 요구 사항
@@ -27,7 +27,7 @@ $ pip install flask pymongo bson dnspython
 ### Environment
 Visual Studio Code, Git, GitHub
 ### Development
-JavaScript, Python
+JavaScript, Python, HTML5, CSS3, Ajax, Jquery, Flask
 ### Communication
 Slack, Gather
 
